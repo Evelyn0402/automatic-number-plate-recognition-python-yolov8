@@ -15,7 +15,7 @@ coco_model = YOLO('yolov8n.pt')
 license_plate_detector = YOLO('./models/license_plate_detector.pt')
 
 # load video
-cap = cv2.VideoCapture('./sample.mp4')
+cap = cv2.VideoCapture('./results/video_original/sample.mp4')
 
 vehicles = [2, 3, 5, 7]
 
@@ -24,6 +24,8 @@ frame_nmr = -1
 ret = True
 while ret:
     frame_nmr += 1
+    # if frame_nmr > 300:
+    #     break
     ret, frame = cap.read()
     if ret:
         results[frame_nmr] = {}
@@ -36,7 +38,11 @@ while ret:
                 detections_.append([x1, y1, x2, y2, score])
 
         # track vehicles
-        track_ids = mot_tracker.update(np.asarray(detections_))
+        if detections_:
+            track_ids = mot_tracker.update(np.asarray(detections_))
+        else:
+            track_ids = []
+        # track_ids = mot_tracker.update(np.asarray(detections_))
 
         # detect license plates
         license_plates = license_plate_detector(frame)[0]
@@ -66,4 +72,6 @@ while ret:
                                                                     'text_score': license_plate_text_score}}
 
 # write results
-write_csv(results, './test.csv')
+# print('line 69 in main.py--------------')
+# print(results)
+write_csv(results, './results/csv/sample.csv')

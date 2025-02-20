@@ -24,17 +24,21 @@ def draw_border(img, top_left, bottom_right, color=(0, 255, 0), thickness=10, li
     return img
 
 
-results = pd.read_csv('./test_interpolated.csv')
+results = pd.read_csv('./results/csv_inter/sample_interpolated.csv')
 
 # load video
-video_path = 'sample.mp4'
+video_path = './results/video_original/sample.mp4'
+print('in visualize.py ---------------reading example video--------')
 cap = cv2.VideoCapture(video_path)
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Specify the codec
+# fourcc = cv2.VideoWriter_fourcc(*'vp80')
+# fourcc = cv2.VideoWriter_fourcc(*'X264')
 fps = cap.get(cv2.CAP_PROP_FPS)
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-out = cv2.VideoWriter('./out.mp4', fourcc, fps, (width, height))
+print('generate output video..............')
+out = cv2.VideoWriter('./results/video_output/sample_out.mp4', fourcc, fps, (width, height))
 
 license_plate = {}
 for car_id in np.unique(results['car_id']):
